@@ -6,6 +6,7 @@
 import logging
 
 from torchvision import transforms
+import torch
 
 from .transforms import (
     GaussianBlur,
@@ -15,6 +16,25 @@ from .transforms import (
 
 logger = logging.getLogger("dinov2")
 
+def gauss_noise_tensor(img, probability=0.25):
+    assert isinstance(img, torch.Tensor)
+    
+    # Check if Gaussian noise should be applied based on probability
+    if torch.rand(1).item() > probability:
+        return img
+    
+    dtype = img.dtype
+    if not img.is_floating_point():
+        img = img.to(torch.float32)
+    
+    sigma = 0.05
+    
+    out = img + sigma * torch.randn_like(img)
+    
+    if out.dtype != dtype:
+        out = out.to(dtype)
+        
+    return out
 
 class DataAugmentationDINO(object):
     def __init__(
@@ -63,7 +83,7 @@ class DataAugmentationDINO(object):
         color_jittering = transforms.Compose(
             [
                 transforms.RandomApply(
-                    [transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.1, hue=0.0)],
+                    [transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.1, hue=0.02)],
                     p=0.8,
                 ),
                 transforms.RandomGrayscale(p=0.1),
@@ -86,6 +106,7 @@ class DataAugmentationDINO(object):
             [
                 transforms.ToTensor(),
                 make_normalize_transform(),
+                gauss_noise_tensor,
             ]
         )
 
