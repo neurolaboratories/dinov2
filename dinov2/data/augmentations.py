@@ -72,6 +72,7 @@ class DataAugmentationDINO(object):
                     interpolation=cv2.INTER_CUBIC
                 ),
                 A.HorizontalFlip(p=0.5),
+                A.Perspective(scale=(0.05, 0.06), p=0.5)
             ]
         )
 
@@ -82,6 +83,7 @@ class DataAugmentationDINO(object):
                     interpolation=cv2.INTER_CUBIC
                 ),
                 A.HorizontalFlip(p=0.5),
+                A.Perspective(scale=(0.05, 0.06), p=0.5)
             ]
         )
 
