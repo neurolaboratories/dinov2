@@ -105,7 +105,7 @@ class DataAugmentationDINO(object):
         self.normalize = transforms.Compose(
             [
                 transforms.ToTensor(),
-                make_normalize_transform(),
+                # make_normalize_transform(),
                 gauss_noise_tensor,
             ]
         )
