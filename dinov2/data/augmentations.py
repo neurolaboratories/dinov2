@@ -95,6 +95,8 @@ class DataAugmentationDINO(object):
                     p=0.8,
                 ),
                 A.ToGray(p=0.1),
+                A.Downscale(scale_min=0.9, scale_max=0.95, p=0.2)
+                A.Cutout(p=0.3)
             ]
         )
 
