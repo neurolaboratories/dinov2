@@ -13,6 +13,10 @@ from .transforms import (
     make_normalize_transform,
 )
 
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
+import cv2
+import numpy as np
 
 logger = logging.getLogger("dinov2")
 
@@ -61,78 +65,83 @@ class DataAugmentationDINO(object):
         logger.info("###################################")
 
         # random resized crop and flip
-        self.geometric_augmentation_global = transforms.Compose(
+        self.geometric_augmentation_global = A.Compose(
             [
-                transforms.RandomResizedCrop(
-                    global_crops_size, scale=global_crops_scale, interpolation=transforms.InterpolationMode.BICUBIC
+                A.RandomResizedCrop(
+                    height=global_crops_size, width=global_crops_size, scale=global_crops_scale, 
+                    interpolation=cv2.INTER_CUBIC
                 ),
-                transforms.RandomHorizontalFlip(p=0.5),
+                A.HorizontalFlip(p=0.5),
             ]
         )
 
-        self.geometric_augmentation_local = transforms.Compose(
-            [
-                transforms.RandomResizedCrop(
-                    local_crops_size, scale=local_crops_scale, interpolation=transforms.InterpolationMode.BICUBIC
+        self.geometric_augmentation_local = A.Compose(
+            [   
+                A.RandomResizedCrop(
+                    height=local_crops_size, width=local_crops_size, scale=local_crops_scale, 
+                    interpolation=cv2.INTER_CUBIC
                 ),
-                transforms.RandomHorizontalFlip(p=0.5),
+                A.HorizontalFlip(p=0.5),
             ]
         )
 
         # color distorsions / blurring
-        color_jittering = transforms.Compose(
+        color_jittering = A.Compose(
             [
-                transforms.RandomApply(
-                    [transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.1, hue=0.02)],
+                A.OneOf(
+                    [A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.1, hue=0.02)],
                     p=0.8,
                 ),
-                transforms.RandomGrayscale(p=0.1),
+                A.ToGray(p=0.1),
             ]
         )
 
         global_transfo1_extra = GaussianBlur(p=1.0)
 
-        global_transfo2_extra = transforms.Compose(
+        global_transfo2_extra = A.Compose(
             [
                 GaussianBlur(p=0.1),
-                transforms.RandomSolarize(threshold=200, p=0.2),
+                A.Solarize(threshold=200, p=0.2),
             ]
         )
 
         local_transfo_extra = GaussianBlur(p=0.5)
 
         # normalization
-        self.normalize = transforms.Compose(
-            [
-                transforms.ToTensor(),
+        self.normalize = A.Compose(
+            [   
                 make_normalize_transform(),
-                gauss_noise_tensor,
+                A.GaussNoise(var_limit=0.25, p=0.25),
+                ToTensorV2()
             ]
         )
 
-        self.global_transfo1 = transforms.Compose([color_jittering, global_transfo1_extra, self.normalize])
-        self.global_transfo2 = transforms.Compose([color_jittering, global_transfo2_extra, self.normalize])
-        self.local_transfo = transforms.Compose([color_jittering, local_transfo_extra, self.normalize])
+        self.global_transfo1 = A.Compose([color_jittering, global_transfo1_extra, self.normalize])
+        self.global_transfo2 = A.Compose([color_jittering, global_transfo2_extra, self.normalize])
+        self.local_transfo = A.Compose([color_jittering, local_transfo_extra, self.normalize])
         
     def __call__(self, image):
         output = {}
 
-        # global crops:
-        im1_base = self.geometric_augmentation_global(image)
-        global_crop_1 = self.global_transfo1(im1_base)
+        image = np.array(image)
 
-        im2_base = self.geometric_augmentation_global(image)
-        global_crop_2 = self.global_transfo2(im2_base)
+        # global crops:
+        im1_base = self.geometric_augmentation_global(image=image)['image']
+        global_crop_1 = self.global_transfo1(image=im1_base)['image']
+
+        im2_base = self.geometric_augmentation_global(image=image)['image']
+        global_crop_2 = self.global_transfo2(image=im2_base)['image']
 
         output["global_crops"] = [global_crop_1, global_crop_2]
 
         # global crops for teacher:
         output["global_crops_teacher"] = [global_crop_1, global_crop_2]
 
-        # local crops:
-        local_crops = [
-            self.local_transfo(self.geometric_augmentation_local(image)) for _ in range(self.local_crops_number)
-        ]
+        local_crops = []
+        for _ in range(self.local_crops_number):
+            local_image = self.geometric_augmentation_local(image=image)['image']
+            local_crops.append(self.local_transfo(image=local_image)['image'])
+        
         output["local_crops"] = local_crops
         output["offsets"] = ()
 

@@ -7,9 +7,10 @@ from typing import Sequence
 
 import torch
 from torchvision import transforms
+import albumentations as A
 
 
-class GaussianBlur(transforms.RandomApply):
+class GaussianBlur(A.OneOf):
     """
     Apply Gaussian Blur to the PIL image.
     """
@@ -17,7 +18,7 @@ class GaussianBlur(transforms.RandomApply):
     def __init__(self, *, p: float = 0.5, radius_min: float = 0.1, radius_max: float = 2.0):
         # NOTE: torchvision is applying 1 - probability to return the original image
         keep_p = 1 - p
-        transform = transforms.GaussianBlur(kernel_size=9, sigma=(radius_min, radius_max))
+        transform = A.GaussianBlur(blur_limit=(9,9), sigma_limit=(radius_min, radius_max))
         super().__init__(transforms=[transform], p=keep_p)
 
 
@@ -46,8 +47,8 @@ IMAGENET_DEFAULT_STD = (0.229, 0.224, 0.225)
 def make_normalize_transform(
     mean: Sequence[float] = IMAGENET_DEFAULT_MEAN,
     std: Sequence[float] = IMAGENET_DEFAULT_STD,
-) -> transforms.Normalize:
-    return transforms.Normalize(mean=mean, std=std)
+) -> A.Normalize:
+    return A.Normalize(mean=mean, std=std)
 
 
 # This roughly matches torchvision's preset for classification training:
