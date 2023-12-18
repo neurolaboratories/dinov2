@@ -1,6 +1,6 @@
 # this corresponds to the default config
 train:
-  dataset_path: NLBDataset:root=/valohai/inputs/data/object/
+  dataset_path: NLBDataset:root=/valohai/inputs/data/object_1/:root2=/valohai/inputs/data/object_2/
   batch_size_per_gpu: 200
 student:
   arch: vit_base
