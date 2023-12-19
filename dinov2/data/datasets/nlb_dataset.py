@@ -9,7 +9,6 @@ from dinov2.data.datasets.extended import ExtendedVisionDataset
 class NLBDataset(ExtendedVisionDataset):
     def __init__(self,
                  root: str,
-                 root2: str = None,
                  transforms: Optional[Callable] = None,
                     transform: Optional[Callable] = None,
                     target_transform: Optional[Callable] = None) -> None:
@@ -17,11 +16,16 @@ class NLBDataset(ExtendedVisionDataset):
         super().__init__(root, transforms, transform, target_transform)
 
         self.root = pathlib.Path(root)
-        self.root2 = pathlib.Path(root2)
+        
+        # get all the files from direcories and subdirectories using pathlib
+        files = self.root.rglob('*')
 
-        self.images_paths = list(self.root.iterdir())
-        if self.root2 is not None:
-            self.images_paths.extend(list(self.root2.iterdir()))
+        # Filter out directories, keep only files
+        files = [file for file in files if file.is_file()]
+
+        print(len(files))
+
+        self.images_paths = files
 
     def get_image_data(self, index: int) -> bytes:  # should return an image as an array
         

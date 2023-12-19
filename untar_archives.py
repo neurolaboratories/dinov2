@@ -9,9 +9,9 @@ from pathlib import Path
 
 def untar_archives(input_path: Path, output_path: Path):
     archives = glob.glob(str(input_path / '*.tar.gz'))
+    final_output_path = output_path / 'object'
+    final_output_path.mkdir(parents=True, exist_ok=True)
     for i, archive in enumerate(archives):
-        final_output_path = output_path / ('object_' + str(i))
-        final_output_path.mkdir(parents=True, exist_ok=True)
         tar = tarfile.open(input_path / archive, "r:gz")
         tar.extractall(final_output_path)
         tar.close()
