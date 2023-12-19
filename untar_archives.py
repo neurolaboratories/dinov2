@@ -12,8 +12,10 @@ def untar_archives(input_path: Path, output_path: Path):
     final_output_path = output_path / 'object'
     final_output_path.mkdir(parents=True, exist_ok=True)
     for i, archive in enumerate(archives):
+        final_output_path_per_archive = final_output_path / f'object_{i}'
+        final_output_path_per_archive.mkdir(parents=True, exist_ok=True)
         tar = tarfile.open(input_path / archive, "r:gz")
-        tar.extractall(final_output_path)
+        tar.extractall(final_output_path_per_archive)
         tar.close()
 
 
