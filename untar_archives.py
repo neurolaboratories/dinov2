@@ -12,7 +12,7 @@ def untar_archives(input_path: Path, output_path: Path):
     for i, archive in enumerate(archives):
         final_output_path = output_path / ('object_' + str(i))
         final_output_path.mkdir(parents=True, exist_ok=True)
-        tar = tarfile.open(input_path / archive, "r:")
+        tar = tarfile.open(input_path / archive, "r:gz")
         tar.extractall(final_output_path)
         tar.close()
 
