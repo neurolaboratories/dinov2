@@ -19,7 +19,7 @@ def untar_archives(input_path: Path, output_path: Path):
         tar.extractall(final_output_path_per_archive)
         tar.close()
         os.system(f'rm {input_path / archive}')
-        os.system('du -h')
+        os.system('df -h')
         print("Extracted in Current Directory")
 
 parser = ArgumentParser(
