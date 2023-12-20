@@ -2,7 +2,7 @@
 train:
   dataset_path: NLBDataset:root=/valohai/inputs/data/object/
   batch_size_per_gpu: 200
-  OFFICIAL_EPOCH_LENGTH: 1250
+  OFFICIAL_EPOCH_LENGTH: 13840
 student:
   arch: vit_base
   block_chunks: 4
@@ -20,4 +20,4 @@ crops:
   global_crops_size: 224
   local_crops_size: 96
 evaluation:
-  eval_period_iterations: 5000
+  eval_period_iterations: 10000
