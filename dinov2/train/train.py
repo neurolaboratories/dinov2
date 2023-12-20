@@ -22,6 +22,7 @@ from dinov2.utils.config import setup
 from dinov2.utils.utils import CosineScheduler
 
 from dinov2.train.ssl_meta_arch import SSLMetaArch
+from stat import S_IREAD, S_IRGRP, S_IROTH
 
 
 torch.backends.cuda.matmul.allow_tf32 = True  # PyTorch 1.12 sets this to False by default
@@ -131,6 +132,7 @@ def do_test(cfg, model, iteration):
         # save teacher checkpoint
         teacher_ckp_path = os.path.join(eval_dir, "teacher_checkpoint.pth")
         torch.save({"teacher": new_state_dict}, teacher_ckp_path)
+        os.chmod(filename, S_IREAD|S_IRGRP|S_IROTH)
 
 
 def do_train(cfg, model, resume=False):

@@ -16,7 +16,7 @@ def untar_archives(input_path: Path, output_path: Path):
         os.system('df -h')
         final_output_path_per_archive = final_output_path / f'object_{i}'
         final_output_path_per_archive.mkdir(parents=True, exist_ok=True)
-        mode = "r:gz" if archive.endswith('.gz') else "r"
+        mode = "r:gz" if archive.endswith('.gz') else "r:"
         tar = tarfile.open(input_path / archive, mode)
         tar.extractall(final_output_path_per_archive)
         tar.close()
