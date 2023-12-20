@@ -132,8 +132,7 @@ def do_test(cfg, model, iteration):
         # save teacher checkpoint
         teacher_ckp_path = os.path.join(eval_dir, "teacher_checkpoint.pth")
         torch.save({"teacher": new_state_dict}, teacher_ckp_path)
-        os.chmod(filename, S_IREAD|S_IRGRP|S_IROTH)
-
+        os.chmod(teacher_ckp_path, S_IREAD | S_IRGRP | S_IROTH)
 
 def do_train(cfg, model, resume=False):
     model.train()
