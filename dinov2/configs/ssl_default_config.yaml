@@ -1,5 +1,5 @@
 MODEL:
-  WEIGHTS: ''
+  WEIGHTS: '/valohai/outputs/teacher_checkpoint.pth'
 compute_precision:
   grad_scaler: true
   teacher:
