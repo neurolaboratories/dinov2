@@ -6,10 +6,13 @@
       - mkdir /valohai/inputs/model/
       - mkdir /valohai/outputs/models/
       - python untar_archives.py --input_path /valohai/inputs/data
+      - ls /valohai/inputs/model/
       - PYTHONPATH=. python dinov2/run/train/train.py {parameters}
     
     inputs:
       - name: data
+        default: gs://valohai-datasets/syn/3dmodels/fruits-and-friends-revised.tar.gz
+      - name: model
         default: gs://valohai-datasets/syn/3dmodels/fruits-and-friends-revised.tar.gz
     parameters:
       - name: config_file
