@@ -163,6 +163,9 @@ def do_train(cfg, model, resume=False):
     OFFICIAL_EPOCH_LENGTH = cfg.train.OFFICIAL_EPOCH_LENGTH
     max_iter = cfg.optim.epochs * OFFICIAL_EPOCH_LENGTH
 
+    if start_iter > max_iter:
+        start_iter = 0
+
     periodic_checkpointer = PeriodicCheckpointer(
         checkpointer,
         period=3 * OFFICIAL_EPOCH_LENGTH,
