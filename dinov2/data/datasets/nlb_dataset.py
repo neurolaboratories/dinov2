@@ -2,6 +2,7 @@ import pathlib
 from typing import Any, Optional, Callable, Tuple
 
 from PIL import Image
+import PIL
 
 from dinov2.data.datasets.extended import ExtendedVisionDataset
 
@@ -30,7 +31,11 @@ class NLBDataset(ExtendedVisionDataset):
     def get_image_data(self, index: int) -> bytes:  # should return an image as an array
         
         image_path = self.images_paths[index]
-        img = Image.open(image_path).convert(mode="RGB")
+
+        try:
+            img = Image.open(image_path).convert(mode="RGB")
+        except PIL.UnidentifiedImageError as e:
+            print(f"Error opening image: {e}")
 
         return img
     
