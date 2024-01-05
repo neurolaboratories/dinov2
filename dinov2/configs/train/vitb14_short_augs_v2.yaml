@@ -8,7 +8,7 @@ ibot:
 train:
   dataset_path: NLBDataset:root=/valohai/inputs/data/object/
   batch_size_per_gpu: 200
-  OFFICIAL_EPOCH_LENGTH: 1250
+  OFFICIAL_EPOCH_LENGTH: 5000
   centering: sinkhorn_knopp
 student:
   arch: vit_base
