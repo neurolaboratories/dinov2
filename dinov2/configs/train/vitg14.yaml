@@ -6,8 +6,9 @@ ibot:
   head_n_prototypes: 131072
 train:
   batch_size_per_gpu: 64
-  dataset_path: ImageNet22k
+  dataset_path: NLBDataset:root=/valohai/inputs/data/object/
   centering: sinkhorn_knopp
+  OFFICIAL_EPOCH_LENGTH: 13840
 student:
   arch: vit_giant2
   patch_size: 14
