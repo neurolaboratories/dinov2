@@ -5,9 +5,10 @@ ibot:
   separate_head: true
   head_n_prototypes: 131072
 train:
-  batch_size_per_gpu: 32
-  dataset_path: ImageNet22k
+  batch_size_per_gpu: 64
+  dataset_path: NLBDataset:root=/valohai/inputs/data/object/
   centering: sinkhorn_knopp
+  OFFICIAL_EPOCH_LENGTH: 13840
 student:
   arch: vit_large
   patch_size: 14
@@ -17,10 +18,18 @@ student:
 teacher:
   momentum_teacher: 0.994
 optim:
-  epochs: 500
+  epochs: 100
   weight_decay_end: 0.2
   base_lr: 2.0e-04  # learning rate for a batch size of 1024
-  warmup_epochs: 80
+  warmup_epochs: 10
   layerwise_decay: 1.0
 crops:
-  local_crops_size: 98
+  global_crops_scale:
+  - 0.4
+  - 1.0
+  local_crops_number: 8
+  local_crops_scale:
+  - 0.25
+  - 0.4
+  global_crops_size: 224
+  local_crops_size: 96
