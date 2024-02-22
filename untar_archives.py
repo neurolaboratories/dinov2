@@ -21,6 +21,10 @@ def untar_archives(input_path: Path, output_path: Path):
         tar.extractall(final_output_path_per_archive)
         tar.close()
         print("Extracted in Current Directory")
+        files = list(final_output_path_per_archive.iterdir())
+        for file in files:
+            if ".json" in str(file):
+                os.remove(file)
 
 parser = ArgumentParser(
     description="Untar archive files from input path to output path")
