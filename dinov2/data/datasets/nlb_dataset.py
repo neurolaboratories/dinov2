@@ -30,7 +30,6 @@ class NLBDataset(ExtendedVisionDataset):
     def get_image_data(self, index: int) -> bytes:  # should return an image as an array
         
         image_path = self.images_paths[index]
-        print(image_path)
         img = Image.open(image_path).convert(mode="RGB")
 
         return img
@@ -42,7 +41,9 @@ class NLBDataset(ExtendedVisionDataset):
         try:
             image = self.get_image_data(index)
         except Exception as e:
-            raise RuntimeError(f"can not read image for sample {index}") from e
+            print(f"can not read image for sample {index}")
+            return None, 0
+            # raise RuntimeError(f"can not read image for sample {index}") from e
         target = self.get_target(index)
 
         if self.transforms is not None:
