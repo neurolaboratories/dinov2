@@ -42,7 +42,7 @@ class NLBDataset(ExtendedVisionDataset):
             image = self.get_image_data(index)
         except Exception as e:
             print(f"can not read image for sample {index}")
-            return None, 0
+            image = self.get_image_data(index + 1)
             # raise RuntimeError(f"can not read image for sample {index}") from e
         target = self.get_target(index)
 
