@@ -1,5 +1,5 @@
 MODEL:
-  WEIGHTS: ''
+  WEIGHTS: '/valohai/outputs/'
 compute_precision:
   grad_scaler: true
   teacher:
