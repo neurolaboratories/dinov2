@@ -344,7 +344,6 @@ def vit_small(patch_size=16, num_register_tokens=0, **kwargs):
 
 def vit_base(patch_size=16, num_register_tokens=0, **kwargs):
     model = DinoVisionTransformer(
-        img_size=512,
         patch_size=patch_size,
         embed_dim=512,
         depth=12,
