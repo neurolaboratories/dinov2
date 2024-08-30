@@ -1,6 +1,6 @@
 # this corresponds to the default config
 train:
-  dataset_path: NLBDataset:root=/valohai/inputs/data/final_dataset_after_filtering_outliers/
+  dataset_path: NLBDataset:root=/valohai/inputs/data/object/
   batch_size_per_gpu: 200
   OFFICIAL_EPOCH_LENGTH: 2200
 student:
