@@ -1,14 +1,14 @@
 # this corresponds to the default config
 train:
   dataset_path: NLBDataset:root=/valohai/inputs/data/object/
-  batch_size_per_gpu: 200
-  OFFICIAL_EPOCH_LENGTH: 1000
+  batch_size_per_gpu: 128
+  OFFICIAL_EPOCH_LENGTH: 700
 student:
   arch: vit_base
   block_chunks: 4
 optim:
   epochs: 100
-  scaling_rule: sqrt_wrt_800
+  scaling_rule: sqrt_wrt_1024
 crops:
   global_crops_scale:
   - 0.4
@@ -20,4 +20,4 @@ crops:
   global_crops_size: 224
   local_crops_size: 96
 evaluation:
-  eval_period_iterations: 10000
+  eval_period_iterations: 2000
