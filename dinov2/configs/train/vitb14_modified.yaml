@@ -1,0 +1,34 @@
+dino:
+  head_n_prototypes: 131072
+  head_bottleneck_dim: 384
+ibot:
+  separate_head: true
+  head_n_prototypes: 131072
+train:
+  batch_size_per_gpu: 128
+  dataset_path: NLBDataset:root=/valohai/inputs/data/object/
+  centering: sinkhorn_knopp
+  OFFICIAL_EPOCH_LENGTH: 3100
+student:
+  arch: vit_base
+  patch_size: 14
+  drop_path_rate: 0.4
+  ffn_layer: swiglufused
+  block_chunks: 4
+teacher:
+  momentum_teacher: 0.994
+optim:
+  epochs: 100
+  scaling_rule: sqrt_wrt_1024
+crops:
+  global_crops_scale:
+  - 0.4
+  - 1.0
+  local_crops_number: 8
+  local_crops_scale:
+  - 0.25
+  - 0.4
+  global_crops_size: 224
+  local_crops_size: 98
+evaluation:
+  eval_period_iterations: 2000
