@@ -17,7 +17,7 @@ student:
   block_chunks: 4
   num_register_tokens: 4
   interpolate_antialias: true
-  interpolate_offset: 0.0
+  interpolate_offset: 0.1
 teacher:
   momentum_teacher: 0.994
 optim:
