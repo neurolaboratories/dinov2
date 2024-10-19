@@ -16,8 +16,6 @@ student:
   ffn_layer: swiglufused
   block_chunks: 4
   num_register_tokens: 4
-  interpolate_antialias: false
-  interpolate_offset: 0.1
 teacher:
   momentum_teacher: 0.994
 optim:
@@ -35,3 +33,5 @@ crops:
   local_crops_size: 98
 evaluation:
   eval_period_iterations: 2000
+optim:
+  base_lr: 0.001  # learning rate for a batch size of 1024
